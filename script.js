@@ -10,7 +10,6 @@ function setMode(selectedMode) {
 function processImage() {
   const fileInput = document.getElementById("imageInput");
   const preview = document.getElementById("preview");
-
   preview.innerHTML = "";
 
   if (!fileInput.files[0]) {
@@ -22,7 +21,7 @@ function processImage() {
 
   img.onload = function () {
     if (mode === "grid") {
-      createGrid(img);
+      createInstagramGrid(img);
     } else {
       createCarousel(img);
     }
@@ -31,41 +30,21 @@ function processImage() {
   img.src = URL.createObjectURL(fileInput.files[0]);
 }
 
-function getRatioSize() {
-  const ratio = document.getElementById("ratioSelect").value;
-
-  if (ratio === "1:1") return { width: 1080, height: 1080 };
-  if (ratio === "4:5") return { width: 1080, height: 1350 };
-  if (ratio === "3:4") return { width: 1080, height: 1440 };
-}
-
-function createGrid(img) {
+function createInstagramGrid(img) {
   const gridValue = parseInt(document.getElementById("gridSelect").value);
 
-  let rows, cols = 3;
+  const cols = 3;
+  const rows = gridValue / 3;
 
-  if (gridValue === 3) rows = 1;
-  if (gridValue === 9) rows = 3;
-  if (gridValue === 12) rows = 4;
+  const tileWidth = 1080;
+  const tileHeight = 1350;
 
-  const size = getRatioSize();
+  const finalWidth = cols * tileWidth;
+  const finalHeight = rows * tileHeight;
 
-  splitImage(img, cols, rows, size.width, size.height, "grid");
-}
+  const fittedCanvas = cropImageToExactSize(img, finalWidth, finalHeight);
 
-function createCarousel(img) {
-  const slides = parseInt(document.getElementById("carouselSelect").value);
-  const size = getRatioSize();
-
-  splitImage(img, slides, 1, size.width, size.height, "carousel");
-}
-
-function splitImage(img, cols, rows, outputWidth, outputHeight, name) {
-  const preview = document.getElementById("preview");
-
-  const sourceWidth = img.width / cols;
-  const sourceHeight = img.height / rows;
-
+  let pieces = [];
   let count = 1;
 
   for (let row = 0; row < rows; row++) {
@@ -73,39 +52,126 @@ function splitImage(img, cols, rows, outputWidth, outputHeight, name) {
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
 
-      canvas.width = outputWidth;
-      canvas.height = outputHeight;
+      canvas.width = tileWidth;
+      canvas.height = tileHeight;
 
       ctx.drawImage(
-        img,
-        col * sourceWidth,
-        row * sourceHeight,
-        sourceWidth,
-        sourceHeight,
+        fittedCanvas,
+        col * tileWidth,
+        row * tileHeight,
+        tileWidth,
+        tileHeight,
         0,
         0,
-        outputWidth,
-        outputHeight
+        tileWidth,
+        tileHeight
       );
 
-      const imageUrl = canvas.toDataURL("image/png");
-
-      const tile = document.createElement("div");
-      tile.className = "tile";
-
-      const image = document.createElement("img");
-      image.src = imageUrl;
-
-      const link = document.createElement("a");
-      link.href = imageUrl;
-      link.download = `${name}-${count}.png`;
-      link.innerText = "Download";
-
-      tile.appendChild(image);
-      tile.appendChild(link);
-      preview.appendChild(tile);
+      pieces.push({
+        number: count,
+        url: canvas.toDataURL("image/png")
+      });
 
       count++;
     }
   }
+
+  // Reverse order because Instagram shows latest post first
+  pieces.reverse();
+
+  pieces.forEach((piece, index) => {
+    showTile(piece.url, `upload-${index + 1}-grid-piece-${piece.number}.png`);
+  });
+}
+
+function cropImageToExactSize(img, targetWidth, targetHeight) {
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+
+  canvas.width = targetWidth;
+  canvas.height = targetHeight;
+
+  const imageRatio = img.width / img.height;
+  const targetRatio = targetWidth / targetHeight;
+
+  let sourceWidth, sourceHeight, sourceX, sourceY;
+
+  if (imageRatio > targetRatio) {
+    sourceHeight = img.height;
+    sourceWidth = img.height * targetRatio;
+    sourceX = (img.width - sourceWidth) / 2;
+    sourceY = 0;
+  } else {
+    sourceWidth = img.width;
+    sourceHeight = img.width / targetRatio;
+    sourceX = 0;
+    sourceY = (img.height - sourceHeight) / 2;
+  }
+
+  ctx.drawImage(
+    img,
+    sourceX,
+    sourceY,
+    sourceWidth,
+    sourceHeight,
+    0,
+    0,
+    targetWidth,
+    targetHeight
+  );
+
+  return canvas;
+}
+
+function createCarousel(img) {
+  const slides = parseInt(document.getElementById("carouselSelect").value);
+
+  const tileWidth = 1080;
+  const tileHeight = 1350;
+
+  const finalWidth = slides * tileWidth;
+  const finalHeight = tileHeight;
+
+  const fittedCanvas = cropImageToExactSize(img, finalWidth, finalHeight);
+
+  for (let i = 0; i < slides; i++) {
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = tileWidth;
+    canvas.height = tileHeight;
+
+    ctx.drawImage(
+      fittedCanvas,
+      i * tileWidth,
+      0,
+      tileWidth,
+      tileHeight,
+      0,
+      0,
+      tileWidth,
+      tileHeight
+    );
+
+    showTile(canvas.toDataURL("image/png"), `carousel-slide-${i + 1}.png`);
+  }
+}
+
+function showTile(imageUrl, filename) {
+  const preview = document.getElementById("preview");
+
+  const tile = document.createElement("div");
+  tile.className = "tile";
+
+  const image = document.createElement("img");
+  image.src = imageUrl;
+
+  const link = document.createElement("a");
+  link.href = imageUrl;
+  link.download = filename;
+  link.innerText = "Download";
+
+  tile.appendChild(image);
+  tile.appendChild(link);
+  preview.appendChild(tile);
 }
