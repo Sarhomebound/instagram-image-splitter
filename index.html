@@ -1,30 +1,52 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Instagram Image Splitter</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <div class="container">
-    <h1>Instagram Image Splitter</h1>
-    <p>Upload an image and split it into Instagram grid posts.</p>
+<div class="container">
+  <h1>Instagram Image Splitter</h1>
 
-    <input type="file" id="imageInput" accept="image/*" />
+  <input type="file" id="imageInput" accept="image/*">
 
+  <h3>Choose type</h3>
+  <button onclick="setMode('grid')">Grid</button>
+  <button onclick="setMode('carousel')">Carousel</button>
+
+  <div id="gridOptions">
+    <h3>Choose Grid</h3>
     <select id="gridSelect">
       <option value="3">3 Grid</option>
       <option value="9">9 Grid</option>
       <option value="12">12 Grid</option>
     </select>
-
-    <button onclick="splitImage()">Split Image</button>
-
-    <div id="preview"></div>
   </div>
 
-  <script src="script.js"></script>
+  <div id="carouselOptions" class="hidden">
+    <h3>Carousel Slides</h3>
+    <select id="carouselSelect">
+      <option value="3">3 Slides</option>
+      <option value="5">5 Slides</option>
+      <option value="10">10 Slides</option>
+      <option value="20">20 Slides</option>
+    </select>
+  </div>
+
+  <h3>Instagram Ratio</h3>
+  <select id="ratioSelect">
+    <option value="1:1">Square 1:1</option>
+    <option value="4:5">Portrait 4:5</option>
+    <option value="3:4">Latest Phone Ratio 3:4</option>
+  </select>
+
+  <br>
+  <button onclick="processImage()">Create Images</button>
+
+  <div id="preview"></div>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
