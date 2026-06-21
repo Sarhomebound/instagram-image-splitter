@@ -1,54 +1,68 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Instagram Image Splitter</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instagram Grid Splitter</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="container">
-  <h1>Instagram Image Splitter</h1>
-  <p>Upload one image and split it for Instagram Grid or Carousel.</p>
 
-  <input type="file" id="imageInput" accept="image/*">
+<h1>Instagram Grid Splitter</h1>
 
-  <h3>Choose Type</h3>
-  <button onclick="setMode('grid')">Grid</button>
-  <button onclick="setMode('carousel')">Carousel</button>
+<p>
+Upload one image and split it into Instagram Grid or Carousel posts.
+</p>
 
-  <div id="gridOptions">
-    <h3>Choose Grid Size</h3>
-    <select id="gridSelect">
-      <option value="3">3x1 Grid - 3240 x 1350</option>
-      <option value="6">3x2 Grid - 3240 x 2700</option>
-      <option value="9">3x3 Grid - 3240 x 4050</option>
-      <option value="12">3x4 Grid - 3240 x 5400</option>
-      <option value="15">3x5 Grid - 3240 x 6750</option>
-      <option value="18">3x6 Grid - 3240 x 8100</option>
-    </select>
-  </div>
+<input type="file" id="imageInput" accept="image/*">
 
-  <div id="carouselOptions" class="hidden">
-    <h3>Choose Carousel Slides</h3>
-    <select id="carouselSelect">
-      <option value="2">2 Slides</option>
-      <option value="3">3 Slides</option>
-      <option value="5">5 Slides</option>
-      <option value="10">10 Slides</option>
-      <option value="20">20 Slides</option>
-    </select>
-  </div>
+<div class="mode-buttons">
+<button onclick="setMode('grid')">Grid</button>
+<button onclick="setMode('carousel')">Carousel</button>
+</div>
 
-  <br>
+<div id="gridOptions">
+<h3>Grid Size</h3>
 
-  <button onclick="processImage()">Create Images</button>
+<select id="gridSelect">
+<option value="3">3×1 Grid</option>
+<option value="6">3×2 Grid</option>
+<option value="9">3×3 Grid</option>
+<option value="12">3×4 Grid</option>
+<option value="15">3×5 Grid</option>
+<option value="18">3×6 Grid</option>
+</select>
 
-  <p><b>For grid posts, upload the downloaded images to Instagram in the same order shown here.</b></p>
+</div>
 
-  <div id="preview"></div>
+<div id="carouselOptions" class="hidden">
+
+<h3>Carousel Slides</h3>
+
+<select id="carouselSelect">
+<option value="2">2 Slides</option>
+<option value="3">3 Slides</option>
+<option value="5">5 Slides</option>
+<option value="10">10 Slides</option>
+<option value="20">20 Slides</option>
+</select>
+
+</div>
+
+<button class="create-btn" onclick="processImage()">
+Create Images
+</button>
+
+<div class="notice">
+Upload to Instagram in the same order shown below.
+</div>
+
+<div id="preview"></div>
+
 </div>
 
 <script src="script.js"></script>
-
 </body>
 </html>
