@@ -8,25 +8,30 @@
 
 <div class="container">
   <h1>Instagram Image Splitter</h1>
+  <p>Upload one image and split it for Instagram Grid or Carousel.</p>
 
   <input type="file" id="imageInput" accept="image/*">
 
-  <h3>Choose type</h3>
+  <h3>Choose Type</h3>
   <button onclick="setMode('grid')">Grid</button>
   <button onclick="setMode('carousel')">Carousel</button>
 
   <div id="gridOptions">
-    <h3>Choose Grid</h3>
+    <h3>Choose Grid Size</h3>
     <select id="gridSelect">
-      <option value="3">3 Grid</option>
-      <option value="9">9 Grid</option>
-      <option value="12">12 Grid</option>
+      <option value="3">3x1 Grid - 3240 x 1350</option>
+      <option value="6">3x2 Grid - 3240 x 2700</option>
+      <option value="9">3x3 Grid - 3240 x 4050</option>
+      <option value="12">3x4 Grid - 3240 x 5400</option>
+      <option value="15">3x5 Grid - 3240 x 6750</option>
+      <option value="18">3x6 Grid - 3240 x 8100</option>
     </select>
   </div>
 
   <div id="carouselOptions" class="hidden">
-    <h3>Carousel Slides</h3>
+    <h3>Choose Carousel Slides</h3>
     <select id="carouselSelect">
+      <option value="2">2 Slides</option>
       <option value="3">3 Slides</option>
       <option value="5">5 Slides</option>
       <option value="10">10 Slides</option>
@@ -34,19 +39,16 @@
     </select>
   </div>
 
-  <h3>Instagram Ratio</h3>
-  <select id="ratioSelect">
-    <option value="1:1">Square 1:1</option>
-    <option value="4:5">Portrait 4:5</option>
-    <option value="3:4">Latest Phone Ratio 3:4</option>
-  </select>
-
   <br>
+
   <button onclick="processImage()">Create Images</button>
+
+  <p><b>For grid posts, upload the downloaded images to Instagram in the same order shown here.</b></p>
 
   <div id="preview"></div>
 </div>
 
 <script src="script.js"></script>
+
 </body>
 </html>
